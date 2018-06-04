@@ -4,18 +4,18 @@ A web app based on shiny, DECIPHER, NCBI ORFfinder and BLAST
 
 ### 1. preparatory work
 
-####pull docker image
+pull docker image
 ```
 docker pull yumapsc/virus_orf_finder
 
 ```
-####clone the repository
+clone the repository
 
 ```
 git clone https://github.com/mayupsc/virus_orf_finder
 ```
 
-####run docker image
+run docker image
 
 ```
 docker run --name shiny -d -p 3838:3838 -v viral_genome:/srv/shiny-server/ yumapsc/virus_orf_finder
