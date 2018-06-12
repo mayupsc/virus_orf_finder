@@ -29,7 +29,11 @@ ui <- dashboardPage(
   dashboardBody(
     tabItems(
       tabItem(tabName = "makedatabase",
-              h3("Work Flow")
+              h3("Work Flow"),
+              box(
+                width = 12,
+                img(src="workflow.jpeg",height="600px",width="900px")
+              )
       ),
       tabItem(tabName = "uploadfiles",
               h3("Virus database"),
