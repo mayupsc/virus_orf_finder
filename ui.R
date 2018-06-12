@@ -30,9 +30,9 @@ ui <- dashboardPage(
     tabItems(
       tabItem(tabName = "makedatabase",
               h3("Work Flow"),
-              box(
-                width = 12,
-                img(src="workflow.jpeg",height="600px",width="900px")
+              fluidRow(
+                
+              img(src="workflow.jpeg",height="70%",width="80%")
               )
       ),
       tabItem(tabName = "uploadfiles",
