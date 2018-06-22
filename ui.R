@@ -10,7 +10,7 @@ ui <- dashboardPage(
   dashboardHeader(title = "Virus ORF Alignment"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Make Database", tabName = "makedatabase", icon = icon("th")),
+      menuItem("WorkFlow", tabName = "makedatabase", icon = icon("th")),
       menuItem("Uploading Files", tabName = "uploadfiles", icon = icon("file",lib = "font-awesome")),
       menuItem("ORFs Database",tabName = "inorfs",icon = icon("database")),
       menuItem("BLAST", tabName = "blast", icon = icon("cogs")),
@@ -32,18 +32,26 @@ ui <- dashboardPage(
               h3("Work Flow"),
               fluidRow(
                 
-              img(src="workflow.jpeg",height="70%",width="80%")
+              img(src="workflow.png",height="70%",width="80%")
               )
       ),
       tabItem(tabName = "uploadfiles",
               h3("Virus database"),
               fluidRow(
-               box(width = 12,
+               box(width = 4,
                        fileInput("file", "input virus genome files(.zip)"),
               conditionalPanel(condition="$('html').hasClass('shiny-busy')",
                                     img(src="giphy.gif"))
                 ),
-
+              box(width = 8,
+                title = "Tree Identifier Simplifier", 
+                solidHeader = TRUE,
+                textInput("raw_name","full name of virus genus","Tomato yellow leaf curl"),
+                textInput("new_name","short name of virus genus:","TYLC")
+                  )
+             
+              ),
+              fluidRow(
                 box(
                   width = 4, status = "info",
                   title = "Virus Genome Files:",
@@ -51,8 +59,6 @@ ui <- dashboardPage(
                 ),
                 box( width = 8, title = "Phylogenetic Tree",solidHeader = TRUE,
                      collapsible = TRUE, plotOutput("plot1",height = "880px"))
-
-
 
               )
       ),
