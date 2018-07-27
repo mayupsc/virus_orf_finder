@@ -11,19 +11,16 @@ ui <- dashboardPage(
   dashboardSidebar(
     fileInput("file", "input virus genome files(.zip)"),
   sidebarMenu(
-    menuItem("Work Flow", tabName = "workflow", icon = icon("th"))
+    menuItem("Work Flow", tabName = "workflow", icon = icon("th")),
+    menuItem("Make Database", tabName = "database", icon = icon("file",lib = "font-awesome"))
     ),
   
     textInput("minorflen","Minimal ORF length (nt) for ORF finder:","50"),
-    textInput("evalue","Expectation value (E) threshold for BLAST:","1e-10"),
     actionButton(class = "btn-sm", "refresh",tagList(icon("refresh"), "Refresh")),
-    
- 
-   sidebarMenu(
-      menuItem("Make Database", tabName = "database", icon = icon("file",lib = "font-awesome"))
-   ),
-   
-    
+    textInput("evalue","Expectation value (E) threshold for BLAST:","1e-10"),
+    textInput("raw_name","full name of virus genus","Tomato yellow leaf curl"),
+    textInput("new_name","short name of virus genus:","TYLC"),
+  
     div(style = "padding-left: 15px; padding-top: 70px;",
         h4("contact "),
         p(class="small"," "),
@@ -38,7 +35,7 @@ ui <- dashboardPage(
       tabItem(tabName = "workflow",
               h3("Work Flow"),
               fluidRow(
-              img(src="workflow.png",height="70%",width="80%"),
+              img(src="workflow",height="70%",width="80%"),
               verbatimTextOutput("preparation")
               )
       ),
@@ -49,14 +46,14 @@ ui <- dashboardPage(
 
                   tabPanel("orfdatabase", 
                                 h3("ORF database"),
-                                fluidRow(
-                                  box(width = 8,
-                                      title = "Tree Identifier Simplifier", 
-                                      solidHeader = TRUE,
-                                      textInput("raw_name","full name of virus genus","Tomato yellow leaf curl"),
-                                      textInput("new_name","short name of virus genus:","TYLC")
-                                  )
-                                ),
+                                # fluidRow(
+                                #   box(width = 8,
+                                #       title = "Tree Identifier Simplifier", 
+                                #       solidHeader = TRUE,
+                                #       textInput("raw_name","full name of virus genus","Tomato yellow leaf curl"),
+                                #       textInput("new_name","short name of virus genus:","TYLC")
+                                #   )
+                                # ),
                                 fluidRow(
                                   box(
                                     width = 5,
@@ -100,3 +97,4 @@ ui <- dashboardPage(
 )
 )
 )
+
