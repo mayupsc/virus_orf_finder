@@ -1,3 +1,9 @@
+library(shiny)
+library(data.table)
+library(jsonlite)
+library(shinydashboard)
+library(seqinr)
+library(DECIPHER)
 ui <- dashboardPage(
 
 
@@ -69,8 +75,5 @@ ui <- dashboardPage(
     )
   )
 )
-
-
-
 
 
