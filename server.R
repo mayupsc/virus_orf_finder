@@ -4,9 +4,9 @@ library(jsonlite)
 library(shinydashboard)
 library(seqinr)
 library(DECIPHER)
-library(DT)
 library(Gviz)
 source("config.R")
+library(DT)
 
 server <-shinyServer(function(input, output) {
 
@@ -64,10 +64,11 @@ server <-shinyServer(function(input, output) {
   output$orfdatabase <- DT::renderDataTable({
     
     #################make orf database##########################
-    
-    input$refresh
+    inFile <- input$file
+    if (is.null(inFile)) return(NULL)
+    files <- unzip(inFile$datapath)
     #system(paste0("cat ",gb_id,"| parallel --verbose --eta ",orf_path," -id {} -ml ",input$minorflen," -s 0 -out ORF/{}.orfs"))
-    #system(paste0("cat ",gb_id,"| parallel --verbose --eta ",orf_path," -id {} -ml ",input$minorflen," -s 0 -outfmt 2 -out ORF/{}.asn"))
+    system(paste0("cat ",gb_id,"| parallel --verbose --eta ",orf_path," -id {} -ml ",input$minorflen," -s 0 -outfmt 2 -out ORF/{}.asn"))
     ## orf_db ="orf_db.fasta"
     system(paste0("cat ORF/*.orfs > ",orf_db))
     ## makeblastdb, input file is "orf_db.fasta"
@@ -78,15 +79,16 @@ server <-shinyServer(function(input, output) {
     orf_num <- c()
     for (i in 1:dim(Species)[1]){
       virus <- read.fasta(files[i])
-      orf <- read.fasta(paste0("ORF/",Species$V1[i],".orfs"))
+      orf <- read.table(paste0("ORF/",Species$V1[i],".asn"),sep = "\n")
+      orf <- gsub(",","",gsub(".*str ","",orf[grep("product",orf$V1),]))
       orf_num <- c(orf_num,length(orf))
       virus_length <- c(virus_length,length(virus[[1]]))
     }
     orfdb <- data.frame(Species,virus_length,orf_num,stringsAsFactors = F)
     colnames(orfdb)[1] <- "Species"
     write.table(orfdb,"database/virus_length.txt",sep = "\t",quote = F,row.names = F)
-    datatable(data.frame(Species=paste0("<a href='#blastp'",
-                                        "alt='",orfdb$Species,"'",                                                 
+    DT::datatable(data.frame(Species=paste0("<a href='#blastp'",
+                                        "alt='",orfdb$Species,"'",
                                         "onclick=\"",
                                         "tabs = $('.tabbable .nav.nav-tabs li');",
                                         "tabs.each(function() {",
@@ -104,6 +106,7 @@ server <-shinyServer(function(input, output) {
                                         orfdb$Species,
                                         "</a>"),orfdb$virus_length,orfdb$orf_num),
               escape = FALSE)
+    #datatable(orfdb)
   })
   
   
@@ -124,9 +127,13 @@ server <-shinyServer(function(input, output) {
       orf_table <- read.table(paste0("ORF/",input$species,".table"),sep = "\t",header = T,stringsAsFactors = F)
       blast_result <- data.frame(cbind(orf_table),hits_number)
 
-      datatable(
-        cbind(' ' = '&oplus;', blast_result), escape = -0,
+      DT::datatable(
+        cbind(' ' = '&oplus;', blast_result), escape = -0,extensions = "Buttons",
+        
         options = list(
+          pageLength = 50,
+          dom = 'Bfrtip',
+          buttons = c('print'),
           columnDefs = list(
             list(visible = FALSE, targets = c(7)),
             list(orderable = FALSE, className = 'details-control', targets = 1)
@@ -264,7 +271,7 @@ server <-shinyServer(function(input, output) {
     }
     dev.off()
     
-    tags$iframe(style="height:600px; width:100%", src=paste0(input$species,".pdf"))
+    shiny::tags$iframe(style="height:600px; width:100%", src=paste0(input$species,".pdf"))
   })
   
   output$downloadHTML <- downloadHandler(
@@ -283,4 +290,3 @@ server <-shinyServer(function(input, output) {
   )
   
 })
-
