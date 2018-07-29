@@ -6,7 +6,7 @@ A web app based on shiny, DECIPHER, NCBI ORFfinder and BLAST
 
 pull docker image
 ```
-docker pull yumapsc/virus_orf_finder
+docker pull yumapsc/vorffinder2.0
 
 ```
 clone the repository
